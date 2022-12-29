@@ -1,0 +1,8 @@
+[submodule "deno"]
+	path = deno
+	url = https://github.com/bartlomieju/deno.git
+	shallow = true
+[submodule "eslint"]
+	path = eslint
+	url = https://github.com/bartlomieju/eslint
+	shallow = true
