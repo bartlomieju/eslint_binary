@@ -4,15 +4,13 @@ Build instructions:
 
 1. Make sure all git submodules are up to date:
    `git submodule update --init --recursive`
-1. Build `deno`: `cd deno; cargo build`
-1. Install npm dependencies in `eslint/`: `cd eslint; npm install`
+1. Run `deno run -A --unstable build.ts`
 
 Try it:
 
 ```
-$ cd eslint
-$ env ESLINT_USE_FLAT_CONFIG=true ../deno/target/debug/deno run -A ./deno.js -c config.js ./foo.js
-/Users/ib/dev/eslint/foo.js
+$ env ESLINT_USE_FLAT_CONFIG=true ./deno/target/debug/eslint -c test/config.js test/foo.js
+/Users/ib/dev/eslint_binary/test/foo.js
   1:5   error  'foo' is assigned a value but never used  no-unused-vars
   3:10  error  'emptyFn' is defined but never used       no-unused-vars
   4:5   error  Unexpected 'debugger' statement           no-debugger
@@ -38,11 +36,10 @@ Secondly, there are several modification to ESLint itself:
 1. `lib/rules/index.js` was changed to use a regular `Map` instead of
    `LazyLoadingRuleMap` and all rules use `require()` directly, instead of
    `() => require(...)`
-1. All the code is bundled to `bundle.js` (bundle can be produced with
-   `.node_modules/.bin/esbuild ./bin/eslint.js --bundle --format=iife --platform=node --outfile=bundle.js`)
-1. Some path modification was applied to load reporters - mainly changes paths
-   from which they are loaded in the bundle, look for `NOTE(bartlomieju)`
-   comments in the bundle
+1. All the code is bundled to `bundle.js` (bundle is produced by `esbuild` in
+   `build.ts` script)
+1. Some path modification was applied to load reporters - they are loaded
+   eagerly in ESLint code and then are limited to built-in reporters
 
 Since there are several places where ESLint does lazy loading, this is not
 really a "self-contained binary"; it still requires certain files to be present
@@ -51,9 +48,9 @@ changes to ESLint itself.
 
 Future work:
 
-- [ ] add a script to ESLint that produces bundle
-- [ ] change ESLint to not include lazy loading paths for bundle - everything
+- [x] add a script to ESLint that produces bundle
+- [x] change ESLint to not include lazy loading paths for bundle - everything
       should be included in the bundle already
 - [ ] update the project to use Deno crates instead of building full Deno
-- [ ] produce a single binary target that only executes bundled ESLint that
+- [x] produce a single binary target that only executes bundled ESLint that
       doesn't have all the Deno CLI flags
