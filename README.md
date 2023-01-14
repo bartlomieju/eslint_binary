@@ -4,7 +4,8 @@ Build instructions:
 
 1. Make sure all git submodules are up to date:
    `git submodule update --init --recursive`
-1. Run `deno run -A --unstable build.ts`
+1. Run `deno run -A --unstable build.ts` (you can add `--release` flag to build
+   release binary)
 
 Try it:
 
