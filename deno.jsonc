@@ -1,0 +1,6 @@
+{
+    "tasks": {
+        "build": "deno run -A --unstable build.ts",
+        "build:release": "deno run -A --unstable build.ts --release"
+    }
+}
