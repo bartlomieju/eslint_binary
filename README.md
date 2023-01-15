@@ -30,7 +30,24 @@ interesting feature for ESLint:
 - Easier distribution - users would only download a single file (or an npm
   package that contains only a binary file). We are aiming at 20-30Mb binary
   file - _hasn't been achieved yet, currently this project uses full build of
-  Deno which clocks at around 70Mb; this will be fixes in the future_.
+  Deno which clocks at around 70Mb; this will be fixed in the future_.
+
+## Roadmap
+
+- [x] add a script to ESLint that produces bundle
+- [x] change ESLint to not include lazy loading paths for bundle - everything
+      should be included in the bundle already
+- [x] produce a single binary target that only executes bundled ESLint that
+      doesn't have all the Deno CLI flags
+- [ ] rewrite one of the built-in ESLint functions to a Rust version using
+      Deno's ops system
+- [ ] rewrite ESLint CLI in Rust - that way we can execute ESLint's JS code only
+      for actual linting, should provide further startup performance
+      improvements
+- [ ] multithreading - files can be linted independently on multiple threads
+- [ ] update the project to use Deno crates instead of building full Deno
+- [ ] integrate `typescript-eslint` into the binary
+- [ ] maybe built-in LSP support?
 
 ## Development
 
@@ -71,23 +88,9 @@ Secondly, there are several modification to ESLint itself:
 1. `lib/rules/index.js` was changed to use a regular `Map` instead of
    `LazyLoadingRuleMap` and all rules use `require()` directly, instead of
    `() => require(...)`
-1. All the code is bundled to `bundle.js` (bundle is produced by `esbuild` in
-   `build.ts` script)
 1. Some path modification was applied to load reporters - they are loaded
    eagerly in ESLint code and then are limited to built-in reporters
+1. All the code is bundled to `bundle.js` (bundle is produced by `esbuild` in
+   `build.ts` script)
 
-Since there are several places where ESLint does lazy loading, this is not
-really a "self-contained binary"; it still requires certain files to be present
-in certain places, but these problems could probably be alleviated with small
-changes to ESLint itself.
-
-Future work:
-
-- [x] add a script to ESLint that produces bundle
-- [x] change ESLint to not include lazy loading paths for bundle - everything
-      should be included in the bundle already
-- [ ] update the project to use Deno crates instead of building full Deno
-- [x] produce a single binary target that only executes bundled ESLint that
-      doesn't have all the Deno CLI flags
-- [ ] rewrite one of the built-in ESLint functions to a Rust version using
-      Deno's ops system
+Hopefully, these changes could be upstreamed to ESLint itself
