@@ -21,6 +21,9 @@ interesting feature for ESLint:
   This should lead to faster startup performance, because there's less work to
   be done on startup (only execution of code).
 
+- Multithreading - _still a TODO_ - lint files using a threadpool of ESLint
+  instances to speed up total time it takes to lint a whole project.
+
 - Sandboxing - using Deno's permissions system we are able to sandbox ESLint
   binary to only have read and write access to the disk and read access to
   environmental variables. None of the ESLint's code, nor plugins code can
